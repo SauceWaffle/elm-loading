@@ -118,47 +118,64 @@ defaultOptions =
 -}
 spinnerNode : SpinnerOptions -> NodeStats -> Html a
 spinnerNode opts stats =
-  svg
-    [ version "1.1", x "0", y "0", viewBox "0 0 126 126"
-    ]
-    [ circle [ cx "63", cy "18", r "18", fill "#F00" ]
+  let
+    scaledSize = if stats.width >= 126 && stats.height >= 126
+                      then 1.26 * (toFloat opts.spinnerscale)
+                      else if stats.width < 126 && stats.width < stats.height
+                              then 1.26 * ((stats.width / 126) * 100)
+                              else 1.26 * ((stats.height/ 126) * 100)
+    sizing = (toString scaledSize) ++ "px"
+  in
+    svg
+      [ version "1.1"
+      , Svg.Attributes.width sizing
+      , Svg.Attributes.height sizing
+      , viewBox "0 0 126 126"
+      , Html.Attributes.style
+          [ ("position", "absolute")
+          , ("top", "50%")
+          , ("left", "50%")
+          , ("transform", "translate(-50%,-50%)")
+          ]
+      ]
+      [ circle [ cx "63", cy "18", r "18", fill opts.spinnercolor ]
+            [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "18;15;13;11;9;7;5;3;18", calcMode "linear", repeatCount "indefinite"
+                      ] []
+            ]
+      , circle [ cx "93", cy "33", r "3", fill opts.spinnercolor ]
+             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "3;18;15;13;11;9;7;5;3", calcMode "linear", repeatCount "indefinite"
+                      ] []
+             ]
+      , circle [ cx "108", cy "63", r "5", fill opts.spinnercolor ]
+            [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "5;3;18;15;13;11;9;7;5", calcMode "linear", repeatCount "indefinite"
+                      ] []
+            ]
+      , circle [ cx "93", cy "93", r "7", fill opts.spinnercolor ]
+             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "7;5;3;18;15;13;11;9;7", calcMode "linear", repeatCount "indefinite"
+                      ] []
+             ]
+      , circle [ cx "63", cy "108", r "9", fill opts.spinnercolor ]
+            [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "9;7;5;3;18;15;13;11;9", calcMode "linear", repeatCount "indefinite"
+                      ] []
+            ]
+      , circle [ cx "33", cy "93", r "11", fill opts.spinnercolor ]
+            [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "11;9;7;5;3;18;15;13;11", calcMode "linear", repeatCount "indefinite"
+                      ] []
+            ]
+      , circle [ cx "18", cy "63", r "13", fill opts.spinnercolor ]
+            [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
+                      , values "13;11;9;7;5;3;18;15;13", calcMode "linear", repeatCount "indefinite"
+                      ] []
+            ]
+      , circle [ cx "33", cy "33", r "15", fill opts.spinnercolor ]
           [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "18;15;13;11;9;7;5;3;18", calcMode "linear", repeatCount "indefinite"
+                    , values "15;13;11;9;7;5;3;18;15", calcMode "linear", repeatCount "indefinite"
                     ] []
           ]
-    , circle [ cx "93", cy "33", r "3", fill "#F00" ]
-           [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "3;18;15;13;11;9;7;5;3", calcMode "linear", repeatCount "indefinite"
-                    ] []
-           ]
-    , circle [ cx "108", cy "63", r "5", fill "#F00" ]
-          [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "5;3;18;15;13;11;9;7;5", calcMode "linear", repeatCount "indefinite"
-                    ] []
-          ]
-    , circle [ cx "93", cy "93", r "7", fill "#F00" ]
-           [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "7;5;3;18;15;13;11;9;7", calcMode "linear", repeatCount "indefinite"
-                    ] []
-           ]
-    , circle [ cx "63", cy "108", r "9", fill "#F00" ]
-          [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "9;7;5;3;18;15;13;11;9", calcMode "linear", repeatCount "indefinite"
-                    ] []
-          ]
-    , circle [ cx "33", cy "93", r "11", fill "#F00" ]
-          [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "11;9;7;5;3;18;15;13;11", calcMode "linear", repeatCount "indefinite"
-                    ] []
-          ]
-    , circle [ cx "18", cy "63", r "13", fill "#F00" ]
-          [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                    , values "13;11;9;7;5;3;18;15;13", calcMode "linear", repeatCount "indefinite"
-                    ] []
-          ]
-    , circle [ cx "33", cy "33", r "15", fill "#F00" ]
-        [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
-                  , values "15;13;11;9;7;5;3;18;15", calcMode "linear", repeatCount "indefinite"
-                  ] []
-        ]
-    ]
+      ]
