@@ -8,11 +8,8 @@ The spinner defaults to being 126px x 126px if the div containing it is big enou
 If it is not big enough, then the spinner will scale down to fit the height or width.
 Spinner size can be customized with nodeIsLoadingWithOptions.
 
-<<<<<<< HEAD
+
 ## Usage
-=======
-## Usage 
->>>>>>> origin/master
     myView : Html msg
     myView =
       nodeIsLoading True
