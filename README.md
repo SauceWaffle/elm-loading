@@ -10,8 +10,8 @@ Spinner size can be customized with nodeIsLoadingWithOptions.
 
 # Usage
   
-  myView : Html msg
-  myView =
-    nodeIsLoading True
-      <| div [ id "my-loading-div" ] [ text "This is a div" ]
+myView : Html msg
+myView =
+  nodeIsLoading True
+    <| div [ id "my-loading-div" ] [ text "This is a div" ]
 
