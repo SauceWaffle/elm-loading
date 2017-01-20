@@ -1,6 +1,4 @@
 # elm-loading
-Put a loading div with animated spinner over an Elm HTML node
-
 This module will apply an animated loading SVG into a node sent in with a Bool.
 
 It sets a fixed div over the node that was provided. This node MUST have an id associated
@@ -10,17 +8,7 @@ The spinner defaults to being 126px x 126px if the div containing it is big enou
 If it is not big enough, then the spinner will scale down to fit the height or width.
 Spinner size can be customized with nodeIsLoadingWithOptions.
 
-# Types
-@docs NodeStats, SpinnerOptions
-
-# Loading
-@docs nodeIsLoading, nodeIsLoadingWithOptions, loadingNode
-
-# Internal
-@docs defaultOptions, defaultSpinnerNode
-
-
-  Usage:  
+# Usage
   
   myView : Html msg
   myView =
