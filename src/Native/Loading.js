@@ -36,6 +36,17 @@ var _saucewaffle$elm_loading$Native = function() {
 
           return stats;
         }
+        else {
+          var stats =
+            { x : 0
+            , y : 0
+            , height: 0
+            , width: 0
+            };
+
+          console.log("Could not locate element for Loading SVG");
+          return stats;
+        }
     }
 
     return {

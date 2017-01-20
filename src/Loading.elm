@@ -1,6 +1,13 @@
 module Loading exposing (..)
 
-{-| This module will apply a vector animated loading SVG into a node send in with a Bool.
+{-| This module will apply an animated loading SVG into a node sent in with a Bool.
+
+  It sets a fixed div over the node that was provided. This node MUST have an id associated
+  with it or it will not be found and a console message will display that it cannot be found.
+
+  The spinner defaults to being 126px x 126px if the div containing it is big enough.
+  If it is not big enough, then the spinner will scale down to fit the height or width.
+  Spinner size can be customized with nodeIsLoadingWithOptions.
 
 
 # Types
@@ -10,7 +17,7 @@ module Loading exposing (..)
 @docs nodeIsLoading, nodeIsLoadingWithOptions, loadingNode
 
 # Internal
-@docs defaultOptions, spinnerNode
+@docs defaultOptions, defaultSpinnerNode
 
 -}
 
@@ -36,9 +43,9 @@ type alias NodeStats =
 
 -}
 type alias SpinnerOptions =
-  { bgcolor : String
-  , spinnercolor : String
-  , spinnerscale : Int
+  { bgColor : String
+  , spinnerColor : String
+  , spinnerScale : Int
   }
 
 
@@ -47,6 +54,14 @@ type alias SpinnerOptions =
 
   Returns a new node that contains the node given and a div that wraps the entire node
     to show the loading SVG.
+
+
+  Usage:
+
+  myView : Html msg
+  myView =
+    nodeIsLoading True
+    <| div [ id "my-loading-div" ] [ text "This is a div" ]
 
 -}
 nodeIsLoading : Bool -> Html a -> Html a
@@ -61,6 +76,23 @@ nodeIsLoading b h =
 
 
 {-| Returns the node with customized options for appearence
+
+
+  Usage:
+
+  myView : Html msg
+  myView =
+    let
+      loadingOptinos = { bgColor = "rgba(200, 0, 0, 0.6)"
+                        , spinnerColor = "#FFF"
+                        , spinnerScale = 75
+                        }
+    in
+      nodeIsLoadingWithOptions True loadingOptions
+      <| div [ id "my-loading-div" ] [ text "This is a div" ]
+
+  This will result in a spinner over the div that is reddish with a white spinner.
+  The spinner will be 75% the scale it normally is.
 
 -}
 nodeIsLoadingWithOptions : Bool -> SpinnerOptions -> Html a -> Html a
@@ -82,7 +114,7 @@ loadingNode : SpinnerOptions -> NodeStats -> Html a -> Html a
 loadingNode o s h =
   let
     styling = Html.Attributes.style
-              [ ("background-color", o.bgcolor)
+              [ ("background-color", o.bgColor)
               , ("position", "fixed")
               , ("left", ((toString s.x) ++ "px") )
               , ("top", ((toString s.y) ++ "px") )
@@ -92,7 +124,7 @@ loadingNode o s h =
               ]
 
     newDiv =  div []
-                  [ div [ styling ] [ spinnerNode o s ]
+                  [ div [ styling ] [ defaultSpinnerNode o s ]
                   , h
                   ]
   in
@@ -107,20 +139,20 @@ loadingNode o s h =
 -}
 defaultOptions : SpinnerOptions
 defaultOptions =
-  { bgcolor = "rgba(200,200,200,0.7)"
-  , spinnercolor = "#000000"
-  , spinnerscale = 100
+  { bgColor = "rgba(200,200,200,0.7)"
+  , spinnerColor = "#000000"
+  , spinnerScale = 100
   }
 
 
 {-| SVG code for the spinner object
 
 -}
-spinnerNode : SpinnerOptions -> NodeStats -> Html a
-spinnerNode opts stats =
+defaultSpinnerNode : SpinnerOptions -> NodeStats -> Html a
+defaultSpinnerNode opts stats =
   let
     scaledSize = if stats.width >= 126 && stats.height >= 126
-                      then 1.26 * (toFloat opts.spinnerscale)
+                      then 1.26 * (toFloat opts.spinnerScale)
                       else if stats.width < 126 && stats.width < stats.height
                               then 1.26 * ((stats.width / 126) * 100)
                               else 1.26 * ((stats.height/ 126) * 100)
@@ -138,42 +170,42 @@ spinnerNode opts stats =
           , ("transform", "translate(-50%,-50%)")
           ]
       ]
-      [ circle [ cx "63", cy "18", r "18", fill opts.spinnercolor ]
+      [ circle [ cx "63", cy "18", r "18", fill opts.spinnerColor ]
             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "18;15;13;11;9;7;5;3;18", calcMode "linear", repeatCount "indefinite"
                       ] []
             ]
-      , circle [ cx "93", cy "33", r "3", fill opts.spinnercolor ]
+      , circle [ cx "93", cy "33", r "3", fill opts.spinnerColor ]
              [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "3;18;15;13;11;9;7;5;3", calcMode "linear", repeatCount "indefinite"
                       ] []
              ]
-      , circle [ cx "108", cy "63", r "5", fill opts.spinnercolor ]
+      , circle [ cx "108", cy "63", r "5", fill opts.spinnerColor ]
             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "5;3;18;15;13;11;9;7;5", calcMode "linear", repeatCount "indefinite"
                       ] []
             ]
-      , circle [ cx "93", cy "93", r "7", fill opts.spinnercolor ]
+      , circle [ cx "93", cy "93", r "7", fill opts.spinnerColor ]
              [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "7;5;3;18;15;13;11;9;7", calcMode "linear", repeatCount "indefinite"
                       ] []
              ]
-      , circle [ cx "63", cy "108", r "9", fill opts.spinnercolor ]
+      , circle [ cx "63", cy "108", r "9", fill opts.spinnerColor ]
             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "9;7;5;3;18;15;13;11;9", calcMode "linear", repeatCount "indefinite"
                       ] []
             ]
-      , circle [ cx "33", cy "93", r "11", fill opts.spinnercolor ]
+      , circle [ cx "33", cy "93", r "11", fill opts.spinnerColor ]
             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "11;9;7;5;3;18;15;13;11", calcMode "linear", repeatCount "indefinite"
                       ] []
             ]
-      , circle [ cx "18", cy "63", r "13", fill opts.spinnercolor ]
+      , circle [ cx "18", cy "63", r "13", fill opts.spinnerColor ]
             [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                       , values "13;11;9;7;5;3;18;15;13", calcMode "linear", repeatCount "indefinite"
                       ] []
             ]
-      , circle [ cx "33", cy "33", r "15", fill opts.spinnercolor ]
+      , circle [ cx "33", cy "33", r "15", fill opts.spinnerColor ]
           [ animate [ attributeName "r", from "18",  to "18", begin "0s", dur "2s"
                     , values "15;13;11;9;7;5;3;18;15", calcMode "linear", repeatCount "indefinite"
                     ] []
